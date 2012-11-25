@@ -1,0 +1,29 @@
+<html>
+<head>
+  <script src='javascripts/AIRAliases.js' type='text/javascript'></script>
+  <script src='javascripts/AIRIntrospector.js' type='text/javascript'></script>
+  <script src='javascripts/jquery-1.8.3.min.js' type='text/javascript'></script>
+
+<script type="text/javascript">
+$(function(){
+  window.nativeWindow.alwaysInFront = true;
+  $("button").click(function(){
+    var str = $("input[type=text]").val();
+    $(".log").append("<p>" + str + ": " + eval(str) + "</p>");
+  });
+});
+</script>
+
+</head>
+
+
+<body>
+Type into box, click button:
+
+<input type="text" rows="1" cols="300"/>
+<button>Push Me</button>
+
+<div class="log">
+</div>
+</body>
+</html>
