@@ -25,6 +25,7 @@
     <width>800</width>
     <height>650</height>
     <minSize>640 480</minSize>
+    <systemChrome>none</systemChrome>
   </initialWindow>
   <supportedProfiles>extendedDesktop</supportedProfiles>
 </application>
