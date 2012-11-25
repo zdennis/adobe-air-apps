@@ -6,11 +6,29 @@
 
 <script type="text/javascript">
 $(function(){
-  window.nativeWindow.alwaysInFront = true;
-  $("button").click(function(){
-    var str = $("input[type=text]").val();
-    $(".log").append("<p>" + str + ": " + eval(str) + "</p>");
-  });
+  function makeThisWindowModal(){
+    window.nativeWindow.alwaysInFront = window.nativeWindow.alwaysInFront ? false : true;
+  }
+
+  function makeNewModalWindow(){
+    var options = new air.NativeWindowInitOptions();
+    var modalWin = null;
+    var width = 450;
+    var height = 250;
+    var bounds = new air.Rectangle(
+      (air.Capabilities.screenResolutionX - width) / 2,
+      (air.Capabilities.screenResolutionY - height) / 2,
+      width, height);
+
+    options.type = air.NativeWindowType.NORMAL;
+
+    modalWin = air.HTMLLoader.createRootWindow(true, options, true, bounds);
+    modalWin.load(new air.URLRequest("index.html"));
+  }
+
+  $("button.make-me-modal").click(makeThisWindowModal);
+  $("button.make-new-modal").click(makeNewModalWindow);
+
 });
 </script>
 
@@ -20,8 +38,8 @@ $(function(){
 <body>
 Type into box, click button:
 
-<input type="text" rows="1" cols="300"/>
-<button>Push Me</button>
+<button class="make-me-modal">Toggle My Modal</button>
+<button class="make-new-modal">New Modal</button>
 
 <div class="log">
 </div>
