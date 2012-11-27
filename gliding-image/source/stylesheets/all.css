@@ -1,0 +1,32 @@
+@charset "utf-8";
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  text-align: left;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+h1 {
+  position: absolute;
+  color: rgba(0, 0, 0, .3);
+  font-weight: bold;
+  font-size: 64px;
+  letter-spacing: -1px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+  padding: 0 0;
+  margin: 0;
+  opacity: 0.1;
+  -webkit-transition: all 0.25s;
+}
+
+h1.phase-in {
+  opacity: 1;
+  -webkit-transition: all 1s;
+}
+

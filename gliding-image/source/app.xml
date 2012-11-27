@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<application xmlns="http://ns.adobe.com/air/application/3.4">
+  <id>com.continuousthinking</id>
+  <versionNumber>0.0.1</versionNumber>
+  <filename>gliding-image</filename>
+  <name>Gliding Image</name>
+  <description>
+    This is a sample app.
+  </description>
+
+  <!-- for windows/linux program menus only, ignored on OSX -->
+  <programMenuFolder>SampleApp</programMenuFolder>
+
+  <icon>
+<!--     <image16x16>images/logo_16.png</image16x16>
+    <image32x32>images/logo_32.png</image32x32>
+    <image48x48>images/logo_48.png</image48x48>
+    <image128x128>images/logo_128.png</image128x128>
+ -->
+  </icon>
+
+  <initialWindow>
+    <content>index.html</content>
+    <visible>true</visible>
+    <width>800</width>
+    <!-- <height>650</height> -->
+<!--     <minSize>640 480</minSize> -->
+    <systemChrome>none</systemChrome>
+    <transparent>true</transparent>
+  </initialWindow>
+  <supportedProfiles>extendedDesktop</supportedProfiles>
+</application>
