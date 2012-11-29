@@ -1,0 +1,3 @@
+#!/bin/bash
+
+mkdir -p pkg && cd build/ && adt -package -storetype pkcs12 -keystore ../*.pfx -target bundle ../pkg/GlidingImage.app app.xml .

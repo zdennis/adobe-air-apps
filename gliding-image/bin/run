@@ -1,0 +1,3 @@
+#!/bin/bash
+
+middleman build && adl build/app.xml -- --text="Failed Miserably" --color="#FF0000"
