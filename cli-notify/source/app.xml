@@ -2,14 +2,14 @@
 <application xmlns="http://ns.adobe.com/air/application/3.4">
   <id>com.continuousthinking</id>
   <versionNumber>0.0.1</versionNumber>
-  <filename>gliding-image</filename>
-  <name>Gliding Image</name>
+  <filename>cli-notify</filename>
+  <name>CliNotify</name>
   <description>
-    This is a sample app.
+    This is a command line utility that can be used to send you an on-screen notification by specifying the text and the color of the text via command-line arguments.
   </description>
 
   <!-- for windows/linux program menus only, ignored on OSX -->
-  <programMenuFolder>SampleApp</programMenuFolder>
+  <programMenuFolder>CliNotify</programMenuFolder>
 
   <icon>
 <!--     <image16x16>images/logo_16.png</image16x16>
