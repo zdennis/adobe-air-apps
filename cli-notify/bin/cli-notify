@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# This is a skeleton shell script to run cli-notify from the command line.
+# Copy this file to anywhere and update the APP_DIR and you'll be all set!
+
+APP_DIR=/path/to/CliNotify.app
+
+$APP_DIR/Contents/MacOS/cli-notify $@
