@@ -1,61 +1,89 @@
 //= require_tree .
 
+// Make the application window modal-by-default
 window.nativeWindow.alwaysInFront = true;
 
+// +ARGV+ will house command line arguments
 var ARGV = {};
-air.NativeApplication.nativeApplication.addEventListener(air.InvokeEvent.INVOKE, function(e){
-  _.each(e.arguments, function(val){
-    var args = val.split("=");
-    key = args[0].replace(/^--/, '');
-    ARGV[key] = args[1];
-  });
-});
+
+var App = {
+  console: air.Introspector.Console,
+  window: window.nativeWindow,
+
+  exit: function(){
+    air.NativeApplication.nativeApplication.exit();
+  },
+
+  onAirEvent: function(event, callback){
+    air.NativeApplication.nativeApplication.addEventListener(event, callback);
+  },
+
+  on: function(event, callback){
+    App.__eventListeners = App.__eventListeners ? App.__eventListeners : {};
+    App.__eventListeners[event] = App.__eventListeners[event] || [];
+    App.__eventListeners[event].push(callback);
+  },
+
+  trigger: function(event){
+    var callbacks;
+    if(App.__eventListeners && App.__eventListeners[event]){
+      callbacks = App.__eventListeners[event];
+      _.each(callbacks, function(callback){
+        callback();
+      });
+    }
+  },
+
+  processCommandLineArguments: function(event){
+    _.each(event.arguments, function(arg){
+      var key_value = arg.split("=");
+      key = key_value[0].replace(/^--/, '');
+      ARGV[key] = key_value[1];
+    });
+    App.trigger("cli-arguments-received");
+  },
+
+  resizeWindow: function(width, height){
+    App.window.width = air.Capabilities.screenResolutionX;
+    App.window.height = air.Capabilities.screenResolutionY;
+  },
+
+  positionWindow: function(x, y){
+    App.window.x = x;
+    App.window.y = y;
+  }
+};
+
+App.onAirEvent(air.InvokeEvent.INVOKE, App.processCommandLineArguments);
 
 $(function(){
-  // Align native AIR application window horizontally and vertically
-  // air.nativeWindow.x = (air.Capabilities.screenResolutionX - window.nativeWindow.width) / 2;
-  // air.nativeWindow.y = (air.Capabilities.screenResolutionY - window.nativeWindow.height) / 2;
-  window.nativeWindow.height = air.Capabilities.screenResolutionY;
+  App.resizeWindow(air.Capabilities.screenResolutionX, air.Capabilities.screenResolutionY);
+  App.positionWindow(0, 0);
 
-  window.nativeWindow.x = 0;
-  window.nativeWindow.y = 0;
+  App.on("cli-arguments-received", function(){
+    var header = $("h1"), body = $("body");
 
-  var interval;
-  var updateText = function(){
-    if(ARGV["text"]){
-      clearInterval(interval);
+    // kill the app
+    var finish = function(){
+      $("body").delegate("h1.done", "webkitTransitionEnd", App.exit);
+      header.css({
+        "top": air.Capabilities.screenResolutionY + header.height()
+      }).removeClass("phase-in").addClass("done");
+    };
 
-      var header = $("h1");
+    // Second-step, occurs after the phase in transition occurs
+    body.delegate("h1.phase-in", "webkitTransitionEnd", function(){
+      //header.on("click", function(){ air.Introspector.Console.log("hai"); });
+      App.onAirEvent(air.Event.DEACTIVATE, finish);
+      $(window).keypress(finish);
+    });
 
-      $("body").delegate("h1.done", "webkitTransitionEnd", function(){
-        air.NativeApplication.nativeApplication.exit();
-      });
+    // Kick everything-off!
+    header.text(ARGV["text"]).addClass("phase-in").css({
+      "opacity": 1,
+      "top": air.Capabilities.screenResolutionY - header.height(),
+      "color": ARGV["color"]
+    });
+  });
 
-      $("body").delegate("h1.phase-in", "webkitTransitionEnd", function(){
-        setTimeout(function(){
-          header.css({
-            "top": air.Capabilities.screenResolutionY + header.height()
-          }).removeClass("phase-in").addClass("done");
-       }, 2000);
-      });
-
-      header.
-        text(ARGV["text"]).
-        addClass("phase-in").
-        css({
-          "opacity": 1,
-          "top": air.Capabilities.screenResolutionY - header.height(),
-          "color": ARGV["color"]
-        })
-
-      setTimeout(function(){
-//        $("h1").css({"opacity": 0, "top": });
-      }, 2000);
-
-      setTimeout(function(){
-//       air.NativeApplication.nativeApplication.exit();
-      }, 4000);
-    }
-  };
-  interval = setInterval(updateText, 200);
 });
