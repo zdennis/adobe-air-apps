@@ -2,7 +2,11 @@ var EmberApp = Ember.Application.create();
 
 EmberApp.Notification = Ember.Object.extend({
   state: '',
-  text: ''
+  text: '',
+  ready: function(){
+    var text = this.get('text');
+    return !_(text).isEmpty();
+  }.property('text')
 });
 
 EmberApp.notification = EmberApp.Notification.create();
@@ -15,11 +19,17 @@ EmberApp.ApplicationView = Ember.View.extend({
   templateName: 'application',
   classNames: 'app-container',
   didInsertElement: function(){
-    var header = this.$("h1");
+    var header       = this.$("h1"),
+        notification = this.controller.notification;
+
+    if(!notification.get('ready')){
+      setTimeout($.proxy(this.didInsertElement, this), 50);
+      return;
+    }
 
     header.bind("webkitTransitionEnd", $.proxy(this.transitionedIn, this));
     header.addClass("phase-in").css({
-      "color": this.controller.notification.color,
+      "color": notification.color,
       "top": air.Capabilities.screenResolutionY - header.height()
     });
   },
