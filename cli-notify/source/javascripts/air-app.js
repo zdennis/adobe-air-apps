@@ -8,18 +8,23 @@ window.AirApp = (function(){
   };
 
   var on = function(event, callback){
-    air.Introspector.Console.log("adding event");
     app.addEventListener(event, callback);
   };
 
   var processCommandLineArguments = function(event){
-    var argv = {};
+    var options = { color: "#00FF00", text: "<text>" };
+
     _.each(event.arguments, function(arg){
-      var key_value = arg.split("=");
-      key = key_value[0].replace(/^--/, '');
-      argv[key] = key_value[1];
+      if(arg.match(/^--.*/)){ // support args like --server and --text="foo"
+        var key_value = arg.split("=");
+        key = key_value[0].replace(/^--/, '');
+        options[key] = key_value[1] || true;
+      } else {
+        options["text"] = arg
+      }
     });
-    $(window).trigger("cli-arguments-received", argv);
+
+    $(window).trigger("cli-arguments-received", options);
   };
 
   var makeModal = function(){
