@@ -45,6 +45,7 @@ EmberApp.ApplicationView = Ember.View.extend({
     var header = $(this.$("h1"));
 
     header.unbind("webkitTransitionEnd");
+    header.bind("webkitTransitionEnd", AirApp.exit);
     header.removeClass("phase-in").addClass("done").css({
       "top": air.Capabilities.screenResolutionY + header.height()
     });
