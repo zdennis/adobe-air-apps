@@ -13,10 +13,10 @@
 
 AirApp.makeModal();
 
-$(window).on('cli-arguments-received', function(e, argv){
+$(window).on('cli-arguments-received', function(e, options){
   EmberApp.notification.
-    set('text', argv['text']).
-    set('color', argv['color']);
+    set('text', options['text']).
+    set('color', options['color']);
 });
 
 $(function(){
