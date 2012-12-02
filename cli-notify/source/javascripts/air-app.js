@@ -4,7 +4,11 @@ window.AirApp = (function(){
       airWindow  = window.nativeWindow;
 
   var exit = function(){
-    app.exit();
+    var exitingEvent = new air.Event(air.Event.EXITING, false, true);
+    app.dispatchEvent(exitingEvent);
+    if (!exitingEvent.isDefaultPrevented()) {
+      app.exit();
+    }
   };
 
   var on = function(event, callback){
@@ -20,7 +24,7 @@ window.AirApp = (function(){
         key = key_value[0].replace(/^--/, '');
         options[key] = key_value[1] || true;
       } else {
-        options["text"] = arg
+        options.text = arg;
       }
     });
 
@@ -48,6 +52,7 @@ window.AirApp = (function(){
   on(air.InvokeEvent.INVOKE, processCommandLineArguments);
 
   return {
+    console: console,
     exit: exit,
     on:   on,
     makeModal: makeModal,

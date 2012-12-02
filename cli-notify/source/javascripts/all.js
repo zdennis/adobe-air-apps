@@ -11,12 +11,21 @@
 
 //= require "./ember-app"
 
+//= require "./notification-server"
+
 AirApp.makeModal();
 
 $(window).on('cli-arguments-received', function(e, options){
-  EmberApp.notification.
-    set('text', options['text']).
-    set('color', options['color']);
+  if(options['server']){
+    EmberApp.set('isServer', true);
+    NotificationServer.start(options['server']);
+  } else {
+    EmberApp.get('router').transitionTo('notification', {text: options.text, color: options.color});
+  }
+});
+
+$(window).on('remote-arguments-received', function(e, options){
+  EmberApp.get('router').transitionTo('notification', {text: options.text, color: options.color});
 });
 
 $(function(){
