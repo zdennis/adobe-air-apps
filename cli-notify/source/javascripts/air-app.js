@@ -1,21 +1,28 @@
-window.AirApp = (function(){
-  var console    = air.Introspector.Console,
-      app        = air.NativeApplication.nativeApplication,
-      airWindow  = window.nativeWindow;
+window.AirApp = Ember.Object.create({
+  console: air.Introspector.Console,
+  app: air.NativeApplication.nativeApplication,
+  airWindow: window.nativeWindow,
 
-  var exit = function(){
-    var exitingEvent = new air.Event(air.Event.EXITING, false, true);
+  init: function(){
+    var self = this._super();
+    this.on(air.InvokeEvent.INVOKE, $.proxy(this.processCommandLineArguments, this));
+    return self;
+  },
+
+  exit: function(){
+    var app = this.get('app'),
+        exitingEvent = new air.Event(air.Event.EXITING, false, true);
     app.dispatchEvent(exitingEvent);
     if (!exitingEvent.isDefaultPrevented()) {
       app.exit();
     }
-  };
+  },
 
-  var on = function(event, callback){
-    app.addEventListener(event, callback);
-  };
+  on: function(event, callback){
+   this.get('app').addEventListener(event, callback);
+  },
 
-  var processCommandLineArguments = function(event){
+  processCommandLineArguments: function(event){
     var options = { color: "#00FF00", text: "<text>" };
 
     _.each(event.arguments, function(arg){
@@ -29,35 +36,27 @@ window.AirApp = (function(){
     });
 
     $(window).trigger("cli-arguments-received", options);
-  };
+  },
 
-  var makeModal = function(){
-    window.nativeWindow.alwaysInFront = true;
-  };
+  makeModal: function(){
+    var airWindow = this.get("airWindow");
+    airWindow.alwaysInFront = true;
+  },
 
-  var maximizeWindow = function(){
-    resizeWindow(air.Capabilities.screenResolutionX, air.Capabilities.screenResolutionY);
-  };
+  maximizeWindow: function(){
+    this.resizeWindow(air.Capabilities.screenResolutionX, air.Capabilities.screenResolutionY);
+  },
 
-  var resizeWindow = function(width, height){
+  resizeWindow: function(width, height){
+    var airWindow = this.get("airWindow");
     airWindow.width = air.Capabilities.screenResolutionX;
     airWindow.height = air.Capabilities.screenResolutionY;
-  };
+  },
 
-  var positionWindow = function(x, y){
+  positionWindow: function(x, y){
+    var airWindow = this.get("airWindow");
     airWindow.x = x;
     airWindow.y = y;
-  };
+  }
+});
 
-  on(air.InvokeEvent.INVOKE, processCommandLineArguments);
-
-  return {
-    console: console,
-    exit: exit,
-    on:   on,
-    makeModal: makeModal,
-    maximizeWindow: maximizeWindow,
-    resizeWindow: resizeWindow,
-    positionWindow: positionWindow
-  };
-})();
