@@ -7,9 +7,23 @@ Standalone Usage:
 
     cli-notify --text="Tests passed!" --color="#00FF00"
 
+Client/Server Usage:
+
+    # Start the server, default port is 8888 if no port is specified
+    cli-notify --server=8888
+
+    # Send raw JSON
+    telnet localhost 8888
+    Connected to localhost (127.0.0.1).
+    Escape character is '^]'.
+    {"text": "notification here", "color": "#FF44FF" }
+
 Intended Usage:
 
     long_running_command ; cli-notify --text="It's done" --color="#00FF00"
+
+    # use default color
+    long_running_command ; cli-notify "It's done"
 
 Examples:
 
@@ -19,7 +33,7 @@ Examples:
 
 ## Running in development
 
-This is an Adobe AIR application that is being developed using [Middleman](http://middlemanapp.com/). At minimum you need to have Ruby, RubyGems, and Bundler installed. With that you can run `bundle` in the project root to make sure you have middleman and its dependencies all set up.
+This is an Adobe AIR application that is being developed using [Middleman](http://middlemanapp.com/) and [Ember.js](http://emberjs.com/). At minimum you need to have Ruby, RubyGems, and Bundler installed. With that you can run `bundle` in the project root to make sure you have middleman and its dependencies all set up.
 
 Next, it's expected that you have the Adobe AIR SDK downloaded and set up so the `adl` command is in your PATH.
 
@@ -45,3 +59,6 @@ To run it from anywhere copy the `bin/cli-notify` shell script to some place acc
 
     cli-notify --text="hello" --color="#00FF00"
 
+## Why not Growl?
+
+This project was a learning experiment to play with Adobe AIR and Ember.js. By using Growl I learn nothing.
