@@ -1,6 +1,6 @@
 window.AirApp = Ember.Object.create({
   console: air.Introspector.Console,
-  app: air.NativeApplication.nativeApplication,
+  airApp: air.NativeApplication.nativeApplication,
   airWindow: window.nativeWindow,
 
   init: function(){
@@ -10,16 +10,16 @@ window.AirApp = Ember.Object.create({
   },
 
   exit: function(){
-    var app = this.get('app'),
+    var airApp = this.get('airApp'),
         exitingEvent = new air.Event(air.Event.EXITING, false, true);
-    app.dispatchEvent(exitingEvent);
+    airApp.dispatchEvent(exitingEvent);
     if (!exitingEvent.isDefaultPrevented()) {
-      app.exit();
+      airApp.exit();
     }
   },
 
   on: function(event, callback){
-   this.get('app').addEventListener(event, callback);
+   this.get('airApp').addEventListener(event, callback);
   },
 
   processCommandLineArguments: function(event){
@@ -35,7 +35,7 @@ window.AirApp = Ember.Object.create({
       }
     });
 
-    $(window).trigger("cli-arguments-received", options);
+    this.set('cli-arguments', options);
   },
 
   makeModal: function(){

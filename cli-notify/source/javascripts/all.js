@@ -15,18 +15,34 @@
 
 AirApp.makeModal();
 
-$(window).on('cli-arguments-received', function(e, options){
-  if(options['server']){
+var CommandLineRunner = Ember.Object.create({
+  run: function(){
+    var options = AirApp.get('cli-arguments');
+    if(options.server){
+      this.runServer(options);
+    } else {
+      this.runSingleNotification(options);
+    }
+  },
+
+  runServer: function(options){
     EmberApp.set('isServer', true);
-    NotificationServer.create().start(options['server']);
-  } else {
+    NotificationServer.create({runner: RemoteCommandRunner}).start(options.server);
+  },
+
+  runSingleNotification: function(options){
     EmberApp.get('router').transitionTo('notification', {text: options.text, color: options.color});
   }
 });
 
-$(window).on('remote-arguments-received', function(e, options){
-  EmberApp.get('router').transitionTo('notification', {text: options.text, color: options.color});
+var RemoteCommandRunner = Ember.Object.create({
+  run: function(connection){
+    var options = connection.get("remote-arguments");
+    EmberApp.get('router').transitionTo('notification', {text: options.text, color: options.color});
+  },
 });
+
+AirApp.addObserver('cli-arguments', CommandLineRunner, 'run');
 
 $(function(){
   AirApp.maximizeWindow();

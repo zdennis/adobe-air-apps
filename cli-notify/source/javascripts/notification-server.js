@@ -1,4 +1,6 @@
 window.NotificationServer = Ember.Object.extend({
+  runner: null,
+
   init: function(){
     var self = this._super();
     AirApp.on(air.Event.EXITING, $.proxy(this.stop, this));
@@ -22,15 +24,20 @@ window.NotificationServer = Ember.Object.extend({
   },
 
   spawnClient: function(event){
-    var socket = event.socket;
-    window.NotificationConnection.create({socket: socket});
+    var socket = event.socket,
+        runner = this.get("runner");
+    NotificationConnection.create({socket: socket, runner: runner});
   }
 });
 
 window.NotificationConnection = Ember.Object.extend({
+  runner: null,
+
   init: function(){
     var self   = this._super(),
-        socket = this.get('socket');
+        socket = this.get("socket"),
+        runner = this.get("runner");
+    this.addObserver("remote-arguments", runner, "run");
     socket.addEventListener(air.ProgressEvent.SOCKET_DATA, $.proxy(this.dataReceived, this));
     return self;
   },
@@ -45,7 +52,7 @@ window.NotificationConnection = Ember.Object.extend({
     } catch(e) { air.trace("bad JSON received: " + json); air.trace(e); }
 
     if(json){
-      $(window).trigger("remote-arguments-received", json);
+      this.set("remote-arguments", json);
     }
   }
 });
