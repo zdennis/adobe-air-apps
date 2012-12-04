@@ -7,44 +7,19 @@
 //= require "./vendor/handlebars-1.0.rc.1.js"
 //= require "./vendor/ember-1.0.0-pre.2-54-gbee0807"
 
-//= require "./air-app"
-
 //= require "./ember-app"
+//= require "./router"
 
-//= require "./notification-server"
+//= require_tree "./models"
+//= require_tree "./lib"
 
-AirApp.makeModal();
+EmberApp.initialize();
 
-var CommandLineRunner = Ember.Object.create({
-  run: function(){
-    var options = AirApp.get('cli-arguments');
-    if(options.server){
-      this.runServer(options);
-    } else {
-      this.runSingleNotification(options);
-    }
-  },
-
-  runServer: function(options){
-    EmberApp.set('isServer', true);
-    NotificationServer.create({runner: RemoteCommandRunner}).start(options.server);
-  },
-
-  runSingleNotification: function(options){
-    EmberApp.get('router').transitionTo('notification', {text: options.text, color: options.color});
-  }
-});
-
-var RemoteCommandRunner = Ember.Object.create({
-  run: function(connection){
-    var options = connection.get("remote-arguments");
-    EmberApp.get('router').transitionTo('notification', {text: options.text, color: options.color});
-  },
-});
-
-AirApp.addObserver('cli-arguments', CommandLineRunner, 'run');
+/* this is what kicks every thing off: receiving command line arguments */
+AirApp.addObserver('cli-arguments', EmberApp.Runners.CommandLineRunner, 'run');
 
 $(function(){
+  AirApp.makeModal();
   AirApp.maximizeWindow();
   AirApp.positionWindow(0, 0);
 });

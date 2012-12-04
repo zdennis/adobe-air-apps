@@ -2,14 +2,6 @@ var EmberApp = Ember.Application.create({
   isServer: false
 });
 
-EmberApp.Notification = Ember.Object.extend({
-  text: '',
-  ready: function(){
-    var text = this.get('text');
-    return !_(text).isEmpty();
-  }.property('text')
-});
-
 EmberApp.ApplicationController = Ember.Controller.extend();
 EmberApp.ApplicationView = Ember.View.extend({
   templateName: 'application',
@@ -64,20 +56,3 @@ EmberApp.NotificationView = Ember.View.extend({
   }
 });
 
-EmberApp.Router = Ember.Router.extend({
-  root: Ember.Route.extend({
-    index: Ember.Route.extend({
-      route: '/'
-    }),
-    notification: Ember.Route.extend({
-      route: '/notification/:options',
-      connectOutlets: function(router, options) {
-        var notification = EmberApp.Notification.create({text: options.text, color: options.color});
-        router.get('notificationController').set('content', notification);
-        router.get('applicationController').connectOutlet('notification');
-      }
-    })
-  })
-});
-
-EmberApp.initialize();
