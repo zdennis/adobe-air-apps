@@ -32,7 +32,7 @@ EmberApp.NotificationView = Ember.View.extend({
   transitionedIn: function(event){
     var header = $(event.target);
     // AirApp.on(air.Event.DEACTIVATE, this.transitionOut);
-    $(window).keypress(this.transitionOut);
+    $(window).keypress($.proxy(this.transitionOut, this));
     header.bind("click", $.proxy(this.transitionOut, this));
     header.unbind("webkitTransitionEnd");
   },
