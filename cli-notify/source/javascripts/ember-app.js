@@ -49,7 +49,7 @@ EmberApp.NotificationView = Ember.View.extend({
     var header = $(this.$("h1"));
 
     header.unbind("webkitTransitionEnd");
-    header.bind("webkitTransitionEnd", this.finishedDisplaying);
+    header.bind("webkitTransitionEnd", $.proxy(this.finishedDisplaying, this));
     header.removeClass("phase-in").addClass("done").css({
       "top": air.Capabilities.screenResolutionY + header.height()
     });

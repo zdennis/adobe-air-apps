@@ -18,7 +18,7 @@ AirApp.makeModal();
 $(window).on('cli-arguments-received', function(e, options){
   if(options['server']){
     EmberApp.set('isServer', true);
-    NotificationServer.start(options['server']);
+    NotificationServer.create().start(options['server']);
   } else {
     EmberApp.get('router').transitionTo('notification', {text: options.text, color: options.color});
   }
